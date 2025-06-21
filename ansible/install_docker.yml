@@ -1,0 +1,17 @@
+---
+- name: Install Docker on Jenkins EC2
+  hosts: jenkins
+  become: yes
+
+  tasks:
+    - name: Install Docker from default Amazon Linux repo
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
