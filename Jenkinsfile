@@ -2,9 +2,9 @@ pipeline {
   agent any
 
   environment {
-    AWS_REGION = 'ap-south-1'
+    AWS_REGION = 'us-east-1'
     ECR_REPO_NAME = 'my-flask-app'
-    AWS_ACCOUNT_ID = '123456789012'
+    AWS_ACCOUNT_ID = '9770-9898-5978'
     IMAGE_TAG = 'latest'
     ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}"
   }
