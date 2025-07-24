@@ -16,22 +16,24 @@ pipeline {
         sh 'docker build -t ${ECR_REPO}:latest .'
       }
     }
-    stage('Create ECR Repository if not exists') {
-      steps {
-        script {
-          def exists = sh (
-            script: "aws ecr describe-repositories --repository-names ${ECR_REPO} --region ${AWS_REGION} || true",
-            returnStatus: true
-          )
-          if (exists != 0) {
-            echo "ECR repository ${ECR_REPO} does not exist. Creating..."
-            sh "aws ecr create-repository --repository-name ${ECR_REPO} --region ${AWS_REGION}"
-          } else {
-            echo "ECR repository ${ECR_REPO} already exists."
-          }
-        }
+stage('Create ECR Repository if not exists') {
+  steps {
+    script {
+      def exists = sh(
+        script: "aws ecr describe-repositories --repository-names ${ECR_REPO} --region ${AWS_REGION}",
+        returnStatus: true
+      )
+      if (exists != 0) {
+        echo "ECR repository ${ECR_REPO} does not exist. Creating..."
+        sh "aws ecr create-repository --repository-name ${ECR_REPO} --region ${AWS_REGION}"
+        echo "Waiting 10 seconds for repo to be ready..."
+        sleep 10
+      } else {
+        echo "ECR repository ${ECR_REPO} already exists."
       }
     }
+  }
+}
     stage('Tag Docker Image for ECR') {
       steps {
         sh 'docker tag ${ECR_REPO}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:latest'
